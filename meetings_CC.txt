@@ -1,0 +1,36 @@
+Meeting 7/9/19:
+
+-we'll make a poster anyway despite not participating to UROC: goal will be to present at SIAM central valley conference (April 2020)
+-ask about why removing .simplify() made a big change to M. Bussonnier
+-if the data f is the fundamental solution then u us the same. Plot the error instead (OK)
+-play with ip widget/volume at some point for make interactive (change M, change k, etc.) Look at previous project if needed.
+-separate cells for vizualization (helps not recomputing everything). Three sections: initializations, core, post-processing (OK)
+-problem ploting ? When f is a plane wave the result if weird ? ANSWER: it was not a plane wave (but cool idea, just check it is solution of Helmholtz ?) (OK)
+-fun exercise: is the plane wave solution of Helmholtz ?
+-write properly what we discussed on the board (notations, calculus, etc)
+-for interior, "replace" nu by -nu (create another jupyter notebook)
+
+
+Meeting 7/11/19:
+-put all notebooks together (OK)
+-question of the BIE interior (is there a -1/2)
+-once things are set make a single ipynb with Helmholtz. Called Acoustic scattering maybe ?
+-be a little careful with f: (x0,y0) better outside of the computational domain to avoid singularities
+-make error plots with the Hankel function for both exterior and interior
+for interior: the BIE slightly changes (we can discuss the reason why). 1/2mu becomes -1/2mu. Doesn't need -1/2 apparently.
+
+Meeting 7/16/19:
+- exterior Acoustic PTR: error plot ok but seems a bit off. Test with a circle. Error non homogeneous. clues: index issue, error in the expressions? coming np.trapz ? Maybe E_C ?
+-talked about the transmission problem, make sure to understand them and start tasks 3,4,5 (take the time to check).
+-Dont forget to pull, make changes ,commit, push.
+
+to do for Thursday: investigaer the non uniformity of the error (see questions above ? try to change the source ?maybe the TRUE plane wave)
+to do for next Tuesday: talk about the poster
+
+
+Metting 7/18/:19:
+-issue resolved for the error plot: periodicity and np.trapz were the problem
+-investigate why trapz makes a difference (bigger error)
+-interior: error looks weird, might be an issue the signs
+
+

@@ -1,0 +1,24 @@
+Week of 6/17/2019:
+	Previous Week - Met online regarding first week's work, and what to expect.  Discussed looking into research symposium.
+	Current Week - Sent e-mail to UROC about abstract submission.  Began weekly log, and looked into UCPath for employee forms.  Answered questions listed on CloakingProject.pdf, including calculation of mu.  Converted grid and density calculations into functions to display multiple results with.  Begin abstract draft for symposium.
+	Next Week - Look into solution for left division calculation of mu \ f (Results aren't accurate, but method seems fine?), plus additional assigned work?  Finish abstract draft for symposium.
+
+Week of 6/24/2019:
+	Previous Week - Finished questions on CloakingProject.pdf, and included calaculation of mu in Jupyter notebook.  Created method of displaying multiple results for different boundaries at once.
+	Current Week - Finish abstract draft for symposium, contact UROC about deadline for submission.  Work on paramaterization of equation 8.  Think about changes in code from exterior to interior and layered boundaries.
+	Next Week - Find solution to error in Star Boundary output.
+
+Week of 7/1/2019:
+	Previous Week - Finished exterior boundary calculations for ellipse, kite, circle.  Made document of observations regarding changes from exterior to interior and layered boundaries.  Finished preliminary abstract.
+	Current Week - Find solution to error in Star boundary calculations.  Possible discuss paramaterization of equation 8. Write out process of parameterization in Week 1 Assignment Answers.
+	Next Week - Attempt interior/exterior boundary combination discussed in Cloaking PDF.
+
+Week of 7/8/2019:
+	Previous Week - Work on parameterization process for equation 8 in the PDF.  Wrap up finding solution to gap in solution plots.
+	Current Week - Have first meeting with Camille.  Discuss next steps for summer project, and summer research symposium.  Finish writing out notations and parameterization.  Create a notebook for interior boundary acoustic scattering.
+	Next Week - Work on fixing error plots, try numerous fixes.  Begin next steps 3, 4, and 5 highlighted in meeting.
+
+
+Week of 7/15/2019:
+	Previous Week - Discuss next steps for the summer project and the summer research symposium.  Finish outlining parameterization of L and M in the code.  Create separate notebooks for exterior and interior acoustic scattering.
+	Current Week - Attempt to correct irregularity in error plots.  Begin another notebook in order to begin working on steps 3, 4, and 5.  (3 and 4 will likely share the same notebook, whereas 5 will be its own notebook).
