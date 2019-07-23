@@ -40,4 +40,4 @@ Meeting 7/23/19:
 -investigate why trapz makes a difference (bigger error)
 -interior: error looks weird, might be an issue the signs: ISSUE WITH EIGENVALUES 
 -exterior representation formula: remove hardcoding, redefine def_f function, add documentation for makegrid and def_f functions (copy to all notebooks)
--interior representation formula: copy exterior rep and modify
+-interior representation formula: copy exterior rep and modify, as well as above tasks listed for exterior
