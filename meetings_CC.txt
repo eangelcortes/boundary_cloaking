@@ -42,3 +42,4 @@ Meeting 7/23/19:
 -exterior representation formula: remove hardcoding, redefine def_f function, add documentation for makegrid and def_f functions (copy to all notebooks)
 -interior representation formula: copy exterior rep and modify, as well as above tasks listed for exterior
 -check code for tasks 3 and 4, try with different solutions (Hankel, plane wave, ...) and different boundaries ( circle, star, etc...) and see how error looks like
+-Task 5, check for ke = ki and f = plane wave, compare data (u and dvu) to exact solution which you can find, combine A's
