@@ -35,3 +35,7 @@ Meeting 7/18/19:
 -math issue on the interior acoustic (leave it as is for now), move forward to tasks 3,4
 
 
+Meeting 7/23/19:
+-talked about poster, structure set. To do: a first full draft by Tuesday
+-investigate why trapz makes a difference (bigger error)
+-interior: error looks weird, might be an issue the signs: ISSUE WITH EIGENVALUES 
