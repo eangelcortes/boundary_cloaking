@@ -28,9 +28,10 @@ to do for Thursday: investigaer the non uniformity of the error (see questions a
 to do for next Tuesday: talk about the poster
 
 
-Metting 7/18/:19:
+Meeting 7/18/19:
 -issue resolved for the error plot: periodicity and np.trapz were the problem
 -investigate why trapz makes a difference (bigger error)
 -interior: error looks weird, might be an issue the signs
+-math issue on the interior acoustic (leave it as is for now), move forward to tasks 3,4
 
 
