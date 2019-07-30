@@ -43,3 +43,9 @@ Meeting 7/23/19:
 -interior representation formula: copy exterior rep and modify, as well as above tasks listed for exterior
 -check code for tasks 3 and 4, try with different solutions (Hankel, plane wave, ...) and different boundaries ( circle, star, etc...) and see how error looks like
 -Task 5, check for ke = ki and f = plane wave, compare data (u and dvu) to exact solution which you can find, combine A's
+
+Meeting 7/30/19:
+-clean up the transmission .ipynb (folow guidelines) and make it public
+-play with rendering (plotly or plt)
+-print some plots for the poster session on Friday
+-check over the notebook if what you wrote as equations is what you implement (for example track the k_ratio, etc)
