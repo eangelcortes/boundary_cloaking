@@ -22,3 +22,13 @@ Week of 7/8/2019:
 Week of 7/15/2019:
 	Previous Week - Discuss next steps for the summer project and the summer research symposium.  Finish outlining parameterization of L and M in the code.  Create separate notebooks for exterior and interior acoustic scattering.
 	Current Week - Attempt to correct irregularity in error plots.  Begin another notebook in order to begin working on steps 3, 4, and 5.  (3 and 4 will likely share the same notebook, whereas 5 will be its own notebook).
+	Next Week - Resolve problems in steps 3 and 4 (Mostly 4 - why is there strangeness in the interior plot?) and begin thinking about how to do step 5.
+
+Week of 7/22/2019:
+	Previous Week - Wrap up notebooks for tasks 3 and 4.  Investigate strange problems from the np.trapz function and the sp.simplify function.  Set up GitHub.
+	Current Week - Begin working on step 5, Transmission Notebook.  Make a draft of Poster for UROC Research Symposium.  Test for different values of k (different values, negative values, etcetera).  Submit Poster to be printed for the Symposium.
+	Next Week - Resolve issues with different boundaries and different k values in Transmission code.  Work on Poster Presentation for Symposium.
+
+Week of 7/29/2019:
+	Previous Week - Submitted poster to UROC for the symposium.  Did first tests for different k values in the Transmission notebook.  Discussed next steps for using Transmission code to simulate cloaking.
+	Current Week - Focus on the Symposium.  Clean up notebooks for the Github Repo and make it public.  Revise notebook and make suggested changes to improve transmission plots before presentation on Friday.
