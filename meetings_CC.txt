@@ -49,3 +49,11 @@ Meeting 7/30/19:
 -play with rendering (plotly or plt)
 -print some plots for the poster session on Friday
 -check over the notebook if what you wrote as equations is what you implement (for example track the k_ratio, etc)
+
+Meeting 8/1/19:
+Transmission problem: -check if the the parameters are at the right place (k_ratio, etc)
+					  -test k_i = k_e for different boundary shapes (is there any issue ?)
+					  -case k_i \neq k_e the solution is still not continuous... Problem here ? investigate
+					  -write the intro and motivation
+					  -add references
+
