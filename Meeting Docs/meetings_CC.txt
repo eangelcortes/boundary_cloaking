@@ -45,7 +45,7 @@ Meeting 7/23/19:
 -Task 5, check for ke = ki and f = plane wave, compare data (u and dvu) to exact solution which you can find, combine A's
 
 Meeting 7/30/19:
--clean up the transmission .ipynb (folow guidelines) and make it public
+-clean up the transmission .ipynb (follow guidelines) and make it public
 -play with rendering (plotly or plt)
 -print some plots for the poster session on Friday
 -check over the notebook if what you wrote as equations is what you implement (for example track the k_ratio, etc)
@@ -57,3 +57,18 @@ Transmission problem: -check if the the parameters are at the right place (k_rat
 					  -write the intro and motivation
 					  -add references
 
+Meeting 8/7/19:
+- Check the periodity of cosine and sine from sympy and numpy (is it 0 to 2pi or -pi to pi)
+- Bonus: Change preliminary to plotly styled views
+- Check other boundaries, see if Star is not the only one with factored error (Kite?) Curvature?
+	Use Matlab code to see if boundary data being computed for star and kite boundaries are correct
+	Try putting .simplify() back in (for normal and Jacobian of boundary)
+	Try checking lambdify section, is it correctly lambdifying the functions of the boundary?
+- Add current issues to bottom of notebook for documentation
+- Separate exact solution calculation from make_solution_grid function - use x and y from make_solution_grid to calculate the exact instead
+- Implement widgets to make notebook cleaner
+- Add more comments throughout the notebook about what the code is doing
+	Also comment after each plot (especially the error plots)
+- Make a text file with unresolved issues in repository (public now, may find a solution)
+- Bonus: Make a document regarding changes and implementations for moving on to three layers (what needs to be improved and done for the next step)
+- Prepare Independent Study form for next semester
