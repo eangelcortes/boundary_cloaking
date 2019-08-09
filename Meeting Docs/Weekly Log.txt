@@ -32,3 +32,9 @@ Week of 7/22/2019:
 Week of 7/29/2019:
 	Previous Week - Submitted poster to UROC for the symposium.  Did first tests for different k values in the Transmission notebook.  Discussed next steps for using Transmission code to simulate cloaking.
 	Current Week - Focus on the Symposium.  Clean up notebooks for the Github Repo and make it public.  Revise notebook and make suggested changes to improve transmission plots before presentation on Friday.
+	Next Week - Expand method to different boundaries (star, kite).
+
+Week of 8/5/2019:
+	Previous Week - Present at the UROC Symposium. Revise Transmission notebook based on fixed formulas for method.
+	Current Week - Test other boundaries for different values of k.  Search for issue in plot at (pi, 0) plotting.  Use widgets to clean up notebook view (tabs for different boundaries!) Begin thinking of ways to expand to three layers.
+	Next Week -

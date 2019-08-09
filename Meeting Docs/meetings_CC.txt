@@ -62,7 +62,7 @@ Meeting 8/7/19:
 - Bonus: Change preliminary to plotly styled views
 - Check other boundaries, see if Star is not the only one with factored error (Kite?) Curvature?
 	Use Matlab code to see if boundary data being computed for star and kite boundaries are correct
-	Try putting .simplify() back in (for normal and Jacobian of boundary)
+	Try putting .simplify() back in (for curvature and Jacobian of boundary)
 	Try checking lambdify section, is it correctly lambdifying the functions of the boundary?
 - Add current issues to bottom of notebook for documentation
 - Separate exact solution calculation from make_solution_grid function - use x and y from make_solution_grid to calculate the exact instead
