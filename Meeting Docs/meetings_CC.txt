@@ -72,3 +72,10 @@ Meeting 8/7/19:
 - Make a text file with unresolved issues in repository (public now, may find a solution)
 - Bonus: Make a document regarding changes and implementations for moving on to three layers (what needs to be improved and done for the next step)
 - Prepare Independent Study form for next semester
+
+
+Meeting 8/29/19: FALL SEMESTER PROJECT 
+-resolved the shape problem by scaling the colorbars
+-to do: cleanup the code !!
+-think about tabs to compute one problem at a time.
+-prepare slide for research meeting
