@@ -79,3 +79,12 @@ Meeting 8/29/19: FALL SEMESTER PROJECT
 -to do: cleanup the code !!
 -think about tabs to compute one problem at a time.
 -prepare slide for research meeting
+
+Meeting 9/12:
+
+- get rid of ; in the .ipynb, and future ones
+- investigate pltly and surfaces rendering issues (potential bug report ?)
+- make sure your function do not rely on global variables.
+- $ pip install line_profiler, or $ conda install line_profiler
+- do not compute logterm(n-m) each time in the loop, precompute an array of lorgterm(i) for i in -M:M and then loopup in this array. 
+-try to astart some changes, and think about what could be done for the second function
