@@ -88,3 +88,11 @@ Meeting 9/12:
 - $ pip install line_profiler, or $ conda install line_profiler
 - do not compute logterm(n-m) each time in the loop, precompute an array of lorgterm(i) for i in -M:M and then loopup in this array. 
 -try to astart some changes, and think about what could be done for the second function
+
+
+Meeting 9/26:
+- Work on NCUWM Abstract, submission between 10/1 and 10/8
+- Continue working on optimization of make_solution grid -> split into make_grid and find_solution
+- Move optimized functions into cloaking notebook -> clean them up, remove commented lines
+- Begin working on slides for presentation in November
+	Transfer information from poster into slides
