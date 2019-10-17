@@ -38,3 +38,6 @@ Week of 8/5/2019:
 	Previous Week - Present at the UROC Symposium. Revise Transmission notebook based on fixed formulas for method.
 	Current Week - Test other boundaries for different values of k.  Search for issue in plot at (pi, 0) plotting.  Use widgets to clean up notebook view (tabs for different boundaries!) Begin thinking of ways to expand to three layers.
 	Next Week -
+
+
+	
