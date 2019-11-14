@@ -183,6 +183,7 @@ def opt_find_boundary_data(f, dt, xbdy, ybdy, ν, J, κ, M, k_i, k_e):
     M1_e = -0.5 / numpy.pi * J * besselj_0e_mn
     M2_e = 0.5 * 1j * J * hankel1_0e_mn - M1_e * logterm_mn
      
+    # Usage of Kress Quadrature
     diag = numpy.arange(0,M)
     M2_e[diag, diag] = J * ( 0.5 * 1j - E_C / numpy.pi - 0.5 / numpy.pi * numpy.log( 0.25 * numpy.power(k_e, 2) * numpy.power(J, 2)))
     L1_e[diag, diag] = 0
@@ -318,11 +319,9 @@ def opt_make_solution_grid(ngrid, alpha, dt, f, u, dvu, xbdy, ybdy, ν, J, κ, M
     
     x_e  = numpy.zeros((M + 1, ngrid - 1))
     y_e  = numpy.zeros((M + 1, ngrid - 1))
-#   v_e  = numpy.zeros((M + 1, ngrid - 1), dtype=complex) # Kernel and sum will include complex numbers
-    
+
     x_i  = numpy.zeros((M + 1, ngrid - 1))
     y_i  = numpy.zeros((M + 1, ngrid - 1))
-    v_i  = numpy.zeros((M + 1, ngrid - 1), dtype=complex) # Kernel and sum will include complex numbers
 
     #Can move grid calculation to its own function...
     for m in range(0, M):
@@ -335,41 +334,33 @@ def opt_make_solution_grid(ngrid, alpha, dt, f, u, dvu, xbdy, ybdy, ν, J, κ, M
     #Ask about simplifying loops, because Kernels are each size MxN and each used to sum single index of v_i and v_e...
     for m in range(0, M):
         for n in range(0, ngrid-1):
-            #x_e[m][n] = xbdy[m] + rgrid[n]*ν[0][m];
-            #y_e[m][n] = ybdy[m] + rgrid[n]*ν[1][m];
-
             xe_diff = x_e[m][n] - xbdy
             ye_diff = y_e[m][n] - ybdy
         
-            distance_e = sqrt(xe_diff**2 + ye_diff**2) #(r in kress)
+            distance_e = sqrt(xe_diff**2 + ye_diff**2)
             cosθ_e = (ν[0][:]*xe_diff + ν[1][:]*ye_diff ) / distance_e;
     
-            
             kernelD_e = 0.25 * 1j * k_e * cosθ_e * hankel1(1, k_e*distance_e)
-            kernelS_e = 0.25 * 1j * hankel1(0, k_e*distance_e) # kress (2.2+)
+            kernelS_e = 0.25 * 1j * hankel1(0, k_e*distance_e)
             
-            #fx = numpy.exp(1j * k_e * (numpy.cos(alpha) * x_e[m][n] + numpy.sin(alpha) * y_e[m][n]));
-            #v_e[m][n] = fx[m,n] + sum(kernelD_e * J * u)* dt - k_ratio * sum(kernelS_e * J * dvu) * dt; #From Representation Formula (1)
             kernelD_e_mn[m,n] = sum(kernelD_e * J * u)
             kernelS_e_mn[m,n] = sum(kernelS_e * J * dvu)
-            # Do the same as above but for the interior...
-            #x_i[m][n] = xbdy[m] - rgrid[n]*ν[0][m]
-            #y_i[m][n] = ybdy[m] - rgrid[n]*ν[1][m]
             
             xi_diff = x_i[m][n] - xbdy
             yi_diff = y_i[m][n] - ybdy
             
-            distance_i = sqrt(xi_diff**2 + yi_diff**2) #(r in kress)
+            distance_i = sqrt(xi_diff**2 + yi_diff**2)
             cosθ_i = (ν[0][:]*xi_diff + ν[1][:]*yi_diff) / distance_i
             
             kernelD_i = 0.25 * 1j * (k_i * cosθ_i * hankel1(1, k_i*distance_i))
             kernelS_i = 0.25 * 1j * hankel1(0, k_i*distance_i)
-            #v_i[m][n] = -sum(kernelD_i * J * u) * dt + sum(kernelS_i * J * dvu) * dt #From Representation Formula (2)
+
             kernelD_i_mn[m,n] = sum(kernelD_i * J * u)
             kernelS_i_mn[m,n] = sum(kernelS_i * J * dvu)
     
     v_e = fx + kernelD_e_mn * dt - k_ratio * kernelS_e_mn * dt
     v_i = -kernelD_i_mn * dt + kernelS_i_mn * dt
+    
     #Impose Periodicity
     x_e[M][:] = x_e[0][:]
     y_e[M][:] = y_e[0][:]
