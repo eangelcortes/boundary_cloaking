@@ -1,14 +1,14 @@
 ## Definition of functions outside of Jupyter notebook.
-import numpy
+import numpy as np
 from sympy import sin, cos, exp
 from numpy import sqrt, log
 from scipy.linalg import toeplitz
 from scipy.special import hankel1
 from scipy.special import jv as besselj
 
-planewave_f = lambda xbdy, ybdy, k, alpha: numpy.exp(1j * k * (numpy.cos(alpha) * xbdy + numpy.sin(alpha) * ybdy))
+planewave_f = lambda xbdy, ybdy, k, alpha: np.exp(1j * k * (np.cos(alpha) * xbdy + np.sin(alpha) * ybdy))
 
-def find_boundary_data(f, xbdy, ybdy, ν, J, κ):
+def find_boundary_data(f, dt, xbdy, ybdy, ν, J, κ, M, k_i, k_e):
     '''
     Computes u and du/dv on the boundary by solving the BIE system
     
@@ -23,7 +23,8 @@ def find_boundary_data(f, xbdy, ybdy, ν, J, κ):
     E_C = 0.5772156649015328606065120900824;  # Euler's constant
     N = M / 2;
     m = np.arange(1, N);
-
+    k_ratio = k_e/k_i
+    
     # Create array for ifft...
     a = [0]
     a.extend(1/m)
@@ -121,9 +122,9 @@ def opt_find_boundary_data(f, dt, xbdy, ybdy, ν, J, κ, M, k_i, k_e):
     normal derivative on the boundary, dvu
     '''
     k_ratio = k_e/k_i
-    E_C =  numpy.euler_gamma # Euler's constant
+    E_C =  np.euler_gamma # Euler's constant
     N = M / 2
-    m = numpy.arange(1, N)
+    m = np.arange(1, N)
 
     # Create array for ifft...
     a = [0]
@@ -131,85 +132,85 @@ def opt_find_boundary_data(f, dt, xbdy, ybdy, ν, J, κ, M, k_i, k_e):
     a.append(1/N)
     a.extend((1/m)[::-1])
 
-    Rj = -2 * numpy.pi * numpy.fft.ifft(a)
-    R = numpy.real(toeplitz(Rj, Rj))
+    Rj = -2 * np.pi * np.fft.ifft(a)
+    R = np.real(toeplitz(Rj, Rj))
 
     # Prepare arrays for solving integral equation of the boundary (Kress pt. 2)
-    A = numpy.zeros((2*M, 2*M), dtype=complex)
-    F = numpy.zeros(2*M, dtype=complex)
+    A = np.zeros((2*M, 2*M), dtype=complex)
+    F = np.zeros(2*M, dtype=complex)
 
-    cosθ_mn = numpy.zeros((M,M))
-    #distance_mn = numpy.zeros((M, M))
-    logterm_mn = numpy.zeros((M, M))
+    cosθ_mn = np.zeros((M,M))
+    #distance_mn = np.zeros((M, M))
+    logterm_mn = np.zeros((M, M))
     
-    besselj_0e_mn = numpy.zeros((M, M), dtype=complex)
-    besselj_1e_mn = numpy.zeros((M, M), dtype=complex)
-    hankel1_0e_mn = numpy.zeros((M, M), dtype=complex)
-    hankel1_1e_mn = numpy.zeros((M, M), dtype=complex)
+    besselj_0e_mn = np.zeros((M, M), dtype=complex)
+    besselj_1e_mn = np.zeros((M, M), dtype=complex)
+    hankel1_0e_mn = np.zeros((M, M), dtype=complex)
+    hankel1_1e_mn = np.zeros((M, M), dtype=complex)
     
-    besselj_0i_mn = numpy.zeros((M, M), dtype=complex)
-    besselj_1i_mn = numpy.zeros((M, M), dtype=complex)
-    hankel1_0i_mn = numpy.zeros((M, M), dtype=complex)
-    hankel1_1i_mn = numpy.zeros((M, M), dtype=complex)
+    besselj_0i_mn = np.zeros((M, M), dtype=complex)
+    besselj_1i_mn = np.zeros((M, M), dtype=complex)
+    hankel1_0i_mn = np.zeros((M, M), dtype=complex)
+    hankel1_1i_mn = np.zeros((M, M), dtype=complex)
     
     logterm_o = {}
     for i in range(-M,M):
         if i != 0: 
-            logterm_o[i] = log(float(4 * numpy.power(numpy.sin(0.5 * i * dt), 2)))
+            logterm_o[i] = log(float(4 * np.power(np.sin(0.5 * i * dt), 2)))
         
     
     for m in range(0, M):
         for n in range(0, M):
-            rdiff = numpy.asarray([xbdy[m] - xbdy[n], ybdy[m] - ybdy[n]]);
-            distance = sqrt(rdiff[:][0]**2 + rdiff[:][1]**2)
+            rdiff = np.asarray([xbdy[m] - xbdy[n], ybdy[m] - ybdy[n]]);
+            r_distance = sqrt(rdiff[:][0]**2 + rdiff[:][1]**2)
             #distance_mn[m,n] = distance
-            besselj_0e_mn[m,n] = besselj(0, k_e * distance)
-            besselj_0i_mn[m,n] = besselj(0, k_i * distance)
+            besselj_0e_mn[m,n] = besselj(0, k_e * r_distance)
+            besselj_0i_mn[m,n] = besselj(0, k_i * r_distance)
             if m != n:
-                cosθ_mn[m, n] = ν[0][n]*(rdiff[0]/distance) + ν[1][n]*(rdiff[1]/distance)
+                cosθ_mn[m, n] = ν[0][n]*(rdiff[0]/r_distance) + ν[1][n]*(rdiff[1]/r_distance)
                 logterm_mn[m,n] = logterm_o[m-n]
 
-                besselj_1e_mn[m,n] = besselj(1, k_e * distance)
-                hankel1_1e_mn[m,n] = hankel1(1, k_e * distance)
-                hankel1_0e_mn[m,n] = hankel1(0, k_e * distance)
+                besselj_1e_mn[m,n] = besselj(1, k_e * r_distance)
+                hankel1_1e_mn[m,n] = hankel1(1, k_e * r_distance)
+                hankel1_0e_mn[m,n] = hankel1(0, k_e * r_distance)
 
-                besselj_1i_mn[m,n] = besselj(1, k_i * distance)
-                hankel1_1i_mn[m,n] = hankel1(1, k_i * distance)
-                hankel1_0i_mn[m,n] = hankel1(0, k_i * distance)
+                besselj_1i_mn[m,n] = besselj(1, k_i * r_distance)
+                hankel1_1i_mn[m,n] = hankel1(1, k_i * r_distance)
+                hankel1_0i_mn[m,n] = hankel1(0, k_i * r_distance)
             
     #Compute kernels of exterior of boundary
-    L1_e = 0.5 * k_e / numpy.pi * J * cosθ_mn * besselj_1e_mn
+    L1_e = 0.5 * k_e / np.pi * J * cosθ_mn * besselj_1e_mn
     L2_e = 0.5 * 1j * k_e * J * cosθ_mn * hankel1_1e_mn - L1_e * logterm_mn
-    M1_e = -0.5 / numpy.pi * J * besselj_0e_mn
+    M1_e = -0.5 / np.pi * J * besselj_0e_mn
     M2_e = 0.5 * 1j * J * hankel1_0e_mn - M1_e * logterm_mn
      
     # Usage of Kress Quadrature
-    diag = numpy.arange(0,M)
-    M2_e[diag, diag] = J * ( 0.5 * 1j - E_C / numpy.pi - 0.5 / numpy.pi * numpy.log( 0.25 * numpy.power(k_e, 2) * numpy.power(J, 2)))
+    diag = np.arange(0,M)
+    M2_e[diag, diag] = J * ( 0.5 * 1j - E_C / np.pi - 0.5 / np.pi * np.log( 0.25 * (k_e**2) * (J**2) ))
     L1_e[diag, diag] = 0
-    L2_e[diag, diag] = 0.5 / numpy.pi * κ * J
+    L2_e[diag, diag] = 0.5 / np.pi * κ * J
             
-    L_e = 0.5 * R * L1_e + 0.5 * (numpy.pi / N) * L2_e
-    M_e = 0.5 * R * M1_e + 0.5 * (numpy.pi / N) * M2_e
+    L_e = 0.5 * R * L1_e + 0.5 * (np.pi / N) * L2_e
+    M_e = 0.5 * R * M1_e + 0.5 * (np.pi / N) * M2_e
                 
     #Calculate kernels of interior of boundary
-    L1_i = 0.5 * k_i / numpy.pi * J * cosθ_mn * besselj_1i_mn
+    L1_i = 0.5 * k_i / np.pi * J * cosθ_mn * besselj_1i_mn
     L2_i = 0.5 * 1j * k_i * J * cosθ_mn * hankel1_1i_mn - L1_i * logterm_mn
-    M1_i = -0.5 / numpy.pi * J * besselj_0i_mn
+    M1_i = -0.5 / np.pi * J * besselj_0i_mn
     M2_i = 0.5 * 1j * J * hankel1_0i_mn - M1_i * logterm_mn
     
     #Replace diagonals where m=n with exception cases
     L1_i[diag, diag] = 0
-    L2_i[diag, diag] = 0.5 / numpy.pi * κ * J;
-    M2_i[diag, diag] = J * ( 0.5j - E_C / numpy.pi - 0.5 / numpy.pi * numpy.log( 0.25 * numpy.power(k_i, 2) * numpy.power(J, 2)))
+    L2_i[diag, diag] = 0.5 / np.pi * κ * J;
+    M2_i[diag, diag] = J * ( 0.5j - E_C / np.pi - 0.5 / np.pi * np.log( 0.25 * (k_i**2) * (J**2)))
     
-    L_i =0.5 * R * L1_i + 0.5 * (numpy.pi / N) * L2_i
-    M_i = 0.5 * R * M1_i + 0.5 *(numpy.pi / N) * M2_i
+    L_i =0.5 * R * L1_i + 0.5 * (np.pi / N) * L2_i
+    M_i = 0.5 * R * M1_i + 0.5 *(np.pi / N) * M2_i
 
     #Matrix of combined representation formulas       
-    A11 = 0.5 * numpy.identity(M) - L_e
+    A11 = 0.5 * np.identity(M) - L_e
     A12 = k_ratio * M_e
-    A21 = 0.5 * numpy.identity(M) + L_i
+    A21 = 0.5 * np.identity(M) + L_i
     A22 = -M_i
 
     #Combine A's into one matrix, A
@@ -220,7 +221,7 @@ def opt_find_boundary_data(f, dt, xbdy, ybdy, ν, J, κ, M, k_i, k_e):
     F[0:M] = f
     
     #Solve for u and dvu from AU = F
-    U = numpy.linalg.solve(A,F)
+    U = np.linalg.solve(A,F)
     u = U[0:M]
     dvu = U[M: 2*M]
     return u, dvu
@@ -239,6 +240,7 @@ def make_solution_grid(ngrid, f, u, dvu, xbdy, ybdy, ν, J, κ, M, k_i, k_e):
     # Find the absolute maximum curvature |κ|max
     κ_max = np.amax(np.abs(κ));
 
+    k_ratio = k_e/k_i
     dn = (1/κ_max)/ngrid;
     rgrid = np.arange(0+dn, 1/ κ_max, dn);
 
@@ -306,22 +308,22 @@ def opt_make_solution_grid(ngrid, alpha, dt, f, u, dvu, xbdy, ybdy, ν, J, κ, M
     '''
     k_ratio = k_e/k_i
     # Find the absolute maximum curvature |κ|max
-    κ_max = numpy.amax(numpy.abs(κ))
+    κ_max = np.amax(np.abs(κ))
 
     dn = (1/κ_max)/ngrid
-    rgrid = numpy.arange(0+dn, 1/ κ_max, dn)
+    rgrid = np.arange(0+dn, 1/ κ_max, dn)
 
     # Allocate memory for the solution
-    kernelD_e_mn = numpy.zeros((M + 1, ngrid - 1), dtype=complex)
-    kernelS_e_mn = numpy.zeros((M + 1, ngrid - 1), dtype=complex)
-    kernelD_i_mn = numpy.zeros((M + 1, ngrid - 1), dtype=complex)
-    kernelS_i_mn = numpy.zeros((M + 1, ngrid - 1), dtype=complex) 
+    kernelD_e_mn = np.zeros((M + 1, ngrid - 1), dtype=complex)
+    kernelS_e_mn = np.zeros((M + 1, ngrid - 1), dtype=complex)
+    kernelD_i_mn = np.zeros((M + 1, ngrid - 1), dtype=complex)
+    kernelS_i_mn = np.zeros((M + 1, ngrid - 1), dtype=complex) 
     
-    x_e  = numpy.zeros((M + 1, ngrid - 1))
-    y_e  = numpy.zeros((M + 1, ngrid - 1))
+    x_e  = np.zeros((M + 1, ngrid - 1))
+    y_e  = np.zeros((M + 1, ngrid - 1))
 
-    x_i  = numpy.zeros((M + 1, ngrid - 1))
-    y_i  = numpy.zeros((M + 1, ngrid - 1))
+    x_i  = np.zeros((M + 1, ngrid - 1))
+    y_i  = np.zeros((M + 1, ngrid - 1))
 
     #Can move grid calculation to its own function...
     for m in range(0, M):
@@ -355,11 +357,11 @@ def opt_make_solution_grid(ngrid, alpha, dt, f, u, dvu, xbdy, ybdy, ν, J, κ, M
             kernelD_i = 0.25 * 1j * (k_i * cosθ_i * hankel1(1, k_i*distance_i))
             kernelS_i = 0.25 * 1j * hankel1(0, k_i*distance_i)
 
-            kernelD_i_mn[m,n] = sum(kernelD_i * J * u)
-            kernelS_i_mn[m,n] = sum(kernelS_i * J * dvu)
+            kernelD_i_mn[m,n] = sum(kernelD_i * J * u) * dt
+            kernelS_i_mn[m,n] = sum(kernelS_i * J * dvu) * dt
     
-    v_e = fx + kernelD_e_mn * dt - k_ratio * kernelS_e_mn * dt
-    v_i = -kernelD_i_mn * dt + kernelS_i_mn * dt
+    v_e = fx + kernelD_e_mn - k_ratio * kernelS_e_mn
+    v_i = -kernelD_i_mn + kernelS_i_mn
     
     #Impose Periodicity
     x_e[M][:] = x_e[0][:]
