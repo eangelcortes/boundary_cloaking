@@ -345,8 +345,8 @@ def opt_make_solution_grid(ngrid, alpha, dt, f, u, dvu, xbdy, ybdy, ν, J, κ, M
             kernelD_e = 0.25 * 1j * k_e * cosθ_e * hankel1(1, k_e*distance_e)
             kernelS_e = 0.25 * 1j * hankel1(0, k_e*distance_e)
             
-            kernelD_e_mn[m,n] = sum(kernelD_e * J * u)
-            kernelS_e_mn[m,n] = sum(kernelS_e * J * dvu)
+            kernelD_e_mn[m,n] = sum(kernelD_e * J * u) * dt
+            kernelS_e_mn[m,n] = sum(kernelS_e * J * dvu) * dt
             
             xi_diff = x_i[m][n] - xbdy
             yi_diff = y_i[m][n] - ybdy
