@@ -1,5 +1,7 @@
-import sympy
-from sympy import cos, sin, exp
+import sympy as sp
+#from sympy import cos, sin, exp
+#CC: is this above line useful here ? 
+t = sp.Symbol('t')
 
 class Boundary:
     '''
@@ -21,15 +23,15 @@ class Boundary:
     
     @property
     def yp(self):
-        return [sympy.diff(p, t) for p in self.y]
+        return [sp.diff(p, t) for p in self.y]
     @property
     def ypp(self):
-        return [sympy.diff(p, t) for p in self.yp]
+        return [sp.diff(p, t) for p in self.yp]
     @property
     def J(self):
         v2 = [i**2 for i in self.yp]
         sv2 = sum(v2)
-        return sympy.sqrt(sv2).simplify()
+        return sp.sqrt(sv2).simplify()
     @property
     def τ(self):
         return [p/self.J for p in self.yp]
@@ -48,11 +50,37 @@ class Boundary:
         else:
             raise ValueError('Need to define the mean curvature for higher dimensions')
             
-t = sympy.Symbol('t')
-
+#    def items(self): # all elements of the class
+#        list_elem = [y, yp, ypp, J, τ, ν, κ]
+#        return [self.p for p in list_elem]
+            
 def sym_to_num(t, B):
-    bdy = sympy.lambdify(t, B.y)
-    ν = sympy.lambdify(t, B.ν)
-    J = sympy.lambdify(t, B.J)
-    κ = sympy.lambdify(t, B.κ)
-    return bdy, ν, J, κ
+    '''
+    Convert the Boundary class elements (sympy) via lamdify (numpy)
+    
+    Inputs
+    ==========
+    t: symbol used in the parameterization B
+    B: Boundary, define via the class Boundary
+    Outputs
+    ==========
+    bdy: lambdified B.y
+    bdy_p: lambdified B.yp
+    bdy_pp: lambdified B.ypp
+    J: lambdified B.J
+    τ: lambdified B.τ
+    ν: lambdified B.ν 
+    κ: lambdified B.κ
+    '''
+    bdy = sp.lambdify(t, B.y)
+    bdy_p = sp.lambdify(t, B.yp)
+    bdy_pp = sp.lambdify(t, B.ypp)
+    τ = sp.lambdify(t, B.τ)
+    ν = sp.lambdify(t, B.ν)
+    J = sp.lambdify(t, B.J)
+    κ = sp.lambdify(t, B.κ)
+    return bdy, bdy_p, bdy_pp, J, τ, ν, κ
+## CC: I suggest to convert all elements of the class
+
+
+
