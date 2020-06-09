@@ -82,11 +82,11 @@ def lclassB(B):
     
     Parameters
     ==========
-    cls: class
+    cls: Boundary class
     
     Returns
     ==========
-    cls: class lambdified   
+    cls: Boundary class lambdified   
     '''
     attributes = ['y', 'yp', 'ypp', 'J', 'τ', 'ν', 'κ']
     for a in attributes:

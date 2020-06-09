@@ -6,25 +6,67 @@ from scipy.linalg import toeplitz
 from scipy.special import hankel1
 from scipy.special import jv as besselj
 
-planewave_f = lambda xbdy, ybdy, k, alpha: np.exp(1j * k * (np.cos(alpha) * xbdy + np.sin(alpha) * ybdy))
-
-def opt_find_boundary_data(f, dt, xbdy, ybdy, ν, J, κ, M, k_i, k_e):
+#CC: created a proper function below
+def planewave_f(x, y, k, α): 
     '''
-    Computes u and du/dv on the boundary by solving the BIE system
+    Computes the plane wave inciden α and wavenumber k on the grid x,y
     
-    Attributes
-    ======
-    kernel of the double layer, L
-    kernel of the single layer, M
-    solution on the boundary, u
-    normal derivative on the boundary, dvu
+    Parameters
+    ==========
+    x: x-ccordinate (array)
+    y: y-coordinate (array)
+    k: wavenumber (complex number) 
+    α: incident angle (float)
+    
+    Returns
+    ==========
+    pw: planewave (array)
+    dpw: planewave gradient (array)
     '''
+    pw = np.exp(1j * k * (np.cos(α) * x + np.sin(α) * y))
+    dpw = [1j * k * np.cos(α) * np.exp(1j * k * (np.cos(α) * x + np.sin(α) * y)),
+      1j * k * np.sin(α) * np.exp(1j * k * (np.cos(α) * x + np.sin(α) * y))]
+
+    return pw, dpw
+
+#CC: took out the opt_ to simplify
+#CC: dt is defined according to M so no need as extra input
+def find_boundary_data(f, B, M, k_i, k_e):
+    '''
+    Computes the boundary data (trace u and normal derivative dvu) 
+    by solving the BIE system using Kress quadrature:
+    (I/2 - De) u +  (k_e/k_i Se) dvu = f
+    (I/2 + Di) u -        Si     dvu = 0
+    
+    Parameters
+    ==========
+    f: source (array)
+    B: boundary, lambdified (class)
+    M: number of quadrature points on the boundary (even integer)
+    k_i: wavenumber interior domain (complex number)
+    k_e: wavenumber exterior domain (complex number)
+    
+    Returns
+    ==========
+    u: solution on the boundary (array)
+    dvu: normal derivative of the solution on the boundary (array)
+    '''
+    #Define the boundary features
+    dt = 2.0 * np.pi/(M)
+    θ = np.arange(0, 2* np.pi, dt)
+    x = B.y_l(θ)[0][:]
+    y = B.y_l(θ)[1][:]
+    ν = B.ν_l(θ)
+    J = B.J_l(θ)
+    κ = B.κ_l(θ)
+    
+    #Define other parameters
     k_ratio = k_e/k_i
     E_C =  np.euler_gamma # Euler's constant
     N = M / 2
     m = np.arange(1, N)
 
-    # Create array for ifft...
+    # Create array for ifft
     a = [0]
     a.extend(1/m)
     a.append(1/N)
@@ -58,7 +100,7 @@ def opt_find_boundary_data(f, dt, xbdy, ybdy, ν, J, κ, M, k_i, k_e):
     
     for m in range(0, M):
         for n in range(0, M):
-            rdiff = np.asarray([xbdy[m] - xbdy[n], ybdy[m] - ybdy[n]]);
+            rdiff = np.asarray([x[m] - x[n], y[m] - y[n]])
             r_distance = sqrt(rdiff[:][0]**2 + rdiff[:][1]**2)
             besselj_0e_mn[m,n] = besselj(0, k_e * r_distance)
             besselj_0i_mn[m,n] = besselj(0, k_i * r_distance)
@@ -122,18 +164,38 @@ def opt_find_boundary_data(f, dt, xbdy, ybdy, ν, J, κ, M, k_i, k_e):
     dvu = U[M: 2*M]
     return u, dvu
 
-
-def opt_make_solution_grid(ngrid, alpha, dt, f, u, dvu, xbdy, ybdy, ν, J, κ, M, k_i, k_e):
+#CC: took out the opt_ to simplify
+def make_solution_grid(ngrid, alpha, f, u, dvu, x, y, B, M, k_i, k_e):
     '''
-    Calculate the solution for interior and exterior domains using u and dvu
+    Computes the solution of a transmission problem (represented via double- and single-layer potentials)
+    using the Periodic Trapezoid rule on a body-fitted grid
     
-    Attributes
+    Parameters
     ==========
-    domain and range values for plot of the solution grid, x and y
-    approximation of the solution using PTR, v
-    exact solution for known case of ke = ki, exact
+    ngrid: number of quadrature point in the normal direction (integer)
+    f: source (array)
+    u: boundary data (array)
+    dvu: derivative of the boundary data (array)
+    B: boundary, lambdified (class)
+    M: number of quadrature points on the boundary (even integer)
+    k_i: wavenumber interior domain (complex number)
+    k_e: wavenumber exterior domain (complex number)
     
+    Returns
+    ==========
+    u: solution on the boundary (array)
+    dvu: normal derivative of the solution on the boundary (array)
     '''
+    
+    #Define the boundary features
+    dt = 2.0 * np.pi/(M)
+    θ = np.arange(0, 2* np.pi, dt)
+    x = B.y_l(θ)[0][:]
+    y = B.y_l(θ)[1][:]
+    ν = B.ν_l(θ)
+    J = B.J_l(θ)
+    κ = B.κ_l(θ)
+    
     k_ratio = k_e/k_i
     # Find the absolute maximum curvature |κ|max
     κ_max = np.amax(np.abs(κ))
@@ -155,17 +217,18 @@ def opt_make_solution_grid(ngrid, alpha, dt, f, u, dvu, xbdy, ybdy, ν, J, κ, M
 
     #Can move grid calculation to its own function...
     for m in range(0, M):
-        x_e[m] = xbdy[m] + rgrid*ν[0][m]
-        y_e[m] = ybdy[m] + rgrid*ν[1][m]
-        x_i[m] = xbdy[m] - rgrid*ν[0][m]
-        y_i[m] = ybdy[m] - rgrid*ν[1][m]
+        x_e[m] = x[m] + rgrid*ν[0][m]
+        y_e[m] = y[m] + rgrid*ν[1][m]
+        x_i[m] = x[m] - rgrid*ν[0][m]
+        y_i[m] = y[m] - rgrid*ν[1][m]
     
-    fx = planewave_f(x_e, y_e, k_e, alpha)
+    fx, dfx = planewave_f(x_e, y_e, k_e, alpha)
+    
     #Ask about simplifying loops, because Kernels are each size MxN and each used to sum single index of v_i and v_e...
     for m in range(0, M):
         for n in range(0, ngrid-1):
-            xe_diff = x_e[m][n] - xbdy
-            ye_diff = y_e[m][n] - ybdy
+            xe_diff = x_e[m][n] - x
+            ye_diff = y_e[m][n] - y
         
             distance_e = sqrt(xe_diff**2 + ye_diff**2)
             cosθ_e = (ν[0][:]*xe_diff + ν[1][:]*ye_diff ) / distance_e;
@@ -176,8 +239,8 @@ def opt_make_solution_grid(ngrid, alpha, dt, f, u, dvu, xbdy, ybdy, ν, J, κ, M
             kernelD_e_mn[m,n] = sum(kernelD_e * J * u) * dt
             kernelS_e_mn[m,n] = sum(kernelS_e * J * dvu) * dt
             
-            xi_diff = x_i[m][n] - xbdy
-            yi_diff = y_i[m][n] - ybdy
+            xi_diff = x_i[m][n] - x
+            yi_diff = y_i[m][n] - y
             
             distance_i = sqrt(xi_diff**2 + yi_diff**2)
             cosθ_i = (ν[0][:]*xi_diff + ν[1][:]*yi_diff) / distance_i
